@@ -1,0 +1,446 @@
+```html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D INK - Đăng Ký Thiết Kế Hình Xăm</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Montserrat & Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <!-- html2canvas CDN to export image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0b0b0b;
+            color: #f3f4f6;
+        }
+        .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-neutral-800 selection:text-white">
+
+    <!-- Header / Navigation -->
+    <header class="border-b border-neutral-900 bg-black/80 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <!-- SVG Logo 2D INK reconstructed -->
+                <svg class="h-10 w-auto" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Concentric lines for '2' -->
+                    <path d="M15 45 C 15 20, 50 20, 50 40 C 50 55, 15 60, 15 75 L 55 75" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="text-white"/>
+                    <path d="M20 42 C 20 25, 45 25, 45 40 C 45 52, 20 57, 20 70 L 50 70" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-400"/>
+                    <path d="M25 39 C 25 30, 40 30, 40 40 C 40 49, 25 54, 25 65 L 45 65" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-neutral-600"/>
+                    
+                    <!-- Tattoo Needle divider -->
+                    <path d="M60 15 L 60 40" stroke="currentColor" stroke-width="4" class="text-white"/>
+                    <path d="M57 40 L 63 40 L 60 60 Z" fill="currentColor" class="text-white"/>
+                    
+                    <!-- Stylized D with marble/bubbled effect simulation in vector -->
+                    <path d="M68 20 L 90 20 C 108 20, 108 75, 90 75 L 68 75 Z" fill="currentColor" class="text-neutral-900" stroke="currentColor" stroke-width="4"/>
+                    <!-- Textured effect inside D -->
+                    <circle cx="80" cy="35" r="4" fill="currentColor" class="text-neutral-400"/>
+                    <circle cx="92" cy="48" r="5" fill="currentColor" class="text-neutral-500"/>
+                    <circle cx="85" cy="60" r="3" fill="currentColor" class="text-neutral-600"/>
+                    <circle cx="76" cy="50" r="6" fill="currentColor" class="text-neutral-700"/>
+                    
+                    <!-- INK text underneath with droplet -->
+                    <text x="60" y="93" fill="currentColor" class="text-white font-bold tracking-widest text-[16px]" font-family="Montserrat" text-anchor="middle">INK</text>
+                    <!-- Droplet on letter I (approx position) -->
+                    <path d="M60 93 L 60 96 C 58 96, 58 98, 60 98 C 62 98, 62 96, 60 96 Z" fill="currentColor" class="text-white"/>
+                </svg>
+                <div>
+                    <h1 class="text-lg font-bold tracking-wider text-white">2D INK</h1>
+                    <p class="text-xs text-neutral-400 uppercase tracking-widest">Tattoo Studio</p>
+                </div>
+            </div>
+            <span class="bg-neutral-900 border border-neutral-800 text-xs text-neutral-300 px-3 py-1.5 rounded-full font-medium">
+                Thiết Kế Miễn Phí (0đ)
+            </span>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-6xl w-full mx-auto p-4 md:py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 flex-grow">
+        
+        <!-- LEFT: Info Summary & Inputs Form (7 cols on large) -->
+        <div class="lg:col-span-7 space-y-6">
+            
+            <!-- Welcome Card -->
+            <div class="bg-gradient-to-br from-neutral-950 to-neutral-900 border border-neutral-900 p-6 rounded-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-neutral-800/10 rounded-full blur-2xl"></div>
+                <h2 class="serif-font text-2xl md:text-3xl text-white mb-3">Kết nối hai bộ não</h2>
+                <p class="text-sm text-neutral-400 leading-relaxed">
+                    Để tụi mình có thể kết nối khớp nhất và tạo ra một tác phẩm duy nhất dành riêng cho bạn (mà không lo bị đội chi phí thiết kế), bạn vui lòng điền các thông tin mong muốn dưới đây nhé!
+                </p>
+            </div>
+
+            <!-- Interactive Form Inputs -->
+            <div class="bg-neutral-950 border border-neutral-900 p-6 rounded-2xl space-y-4">
+                <h3 class="text-base font-semibold text-white flex items-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-white"></span>
+                    <span>1. Thông Tin Đăng Ký Của Bạn</span>
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-neutral-400 uppercase mb-1">Vị Trí Xăm Chính Xác</label>
+                        <input id="form-position" type="text" placeholder="Ví dụ: bắp tay ngoài, cổ chân..." class="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-neutral-400 uppercase mb-1">Kích Thước Mong Muốn (cm)</label>
+                        <input id="form-size" type="text" placeholder="Ví dụ: 10 x 15 cm..." class="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-colors">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-neutral-400 uppercase mb-1">Màu Sắc Chủ Đạo</label>
+                        <select id="form-color" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-neutral-500 transition-colors">
+                            <option value="Trắng đen (Black & Grey)">Trắng đen (Black & Grey)</option>
+                            <option value="Tả thực (Realism)">Tả thực (Realism)</option>
+                            <option value="Blackwork / Dark Art">Blackwork / Dark Art</option>
+                            <option value="Full màu (Color Tattoo)">Full màu (Color Tattoo)</option>
+                            <option value="Chưa xác định (Cần tư vấn)">Chưa xác định (Cần tư vấn)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-neutral-400 uppercase mb-1">Chi Phí Dự Kiến (Budget)</label>
+                        <input id="form-budget" type="text" placeholder="Ví dụ: 2 triệu - 3 triệu..." class="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-colors">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-neutral-400 uppercase mb-1">Chủ Đề & Ý Tưởng Chi Tiết</label>
+                    <textarea id="form-concept" rows="3" placeholder="Mô tả ý tưởng của bạn hoặc câu chuyện muốn gửi gắm vào hình xăm..." class="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-500 transition-colors"></textarea>
+                </div>
+            </div>
+
+            <!-- Work Process & Rules Card -->
+            <div class="bg-neutral-950 border border-neutral-900 p-6 rounded-2xl space-y-6">
+                <div>
+                    <h3 class="text-base font-semibold text-white flex items-center space-x-2 mb-4">
+                        <span class="w-2 h-2 rounded-full bg-white"></span>
+                        <span>2. Quy Trình & Lưu Ý Quan Trọng</span>
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Step 1 -->
+                        <div class="bg-neutral-900/50 p-4 rounded-xl border border-neutral-900 space-y-2">
+                            <div class="flex items-center space-x-2 text-white">
+                                <span class="text-xs bg-neutral-800 text-neutral-300 w-5 h-5 flex items-center justify-center rounded-full font-bold">1</span>
+                                <h4 class="font-medium text-sm">Chốt Ý Tưởng (24 Giờ)</h4>
+                            </div>
+                            <p class="text-xs text-neutral-400 leading-relaxed">
+                                Bạn có <span class="text-white font-semibold">24 tiếng</span> để suy nghĩ, thêm/bớt chi tiết hoặc đổi chủ đề. Sau 24h, ý tưởng sẽ được khóa để thợ lên mẫu vẽ.
+                            </p>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="bg-neutral-900/50 p-4 rounded-xl border border-neutral-900 space-y-2">
+                            <div class="flex items-center space-x-2 text-white">
+                                <span class="text-xs bg-neutral-800 text-neutral-300 w-5 h-5 flex items-center justify-center rounded-full font-bold">2</span>
+                                <h4 class="font-medium text-sm">Nhận Mẫu Layout</h4>
+                            </div>
+                            <p class="text-xs text-neutral-400 leading-relaxed">
+                                Thời gian thiết kế từ <span class="text-white font-semibold">2 - 3 ngày</span> (tùy độ khó). Tiệm sẽ gửi cho bạn <span class="text-white font-semibold">2 phương án layout</span> để lựa chọn.
+                            </p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="bg-neutral-900/50 p-4 rounded-xl border border-neutral-900 space-y-2">
+                            <div class="flex items-center space-x-2 text-white">
+                                <span class="text-xs bg-neutral-800 text-neutral-300 w-5 h-5 flex items-center justify-center rounded-full font-bold">3</span>
+                                <h4 class="font-medium text-sm">Chỉnh Sửa Hình Vẽ</h4>
+                            </div>
+                            <p class="text-xs text-neutral-400 leading-relaxed">
+                                Bạn có thể chỉnh sửa chi tiết nhỏ trên mẫu đã chọn, miễn là không làm thay đổi quá nhiều ảnh hưởng lớn đến bố cục tổng thể mà thợ đã sắp đặt.
+                            </p>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="bg-neutral-900/50 p-4 rounded-xl border border-neutral-900 space-y-2">
+                            <div class="flex items-center space-x-2 text-white">
+                                <span class="text-xs bg-red-950/40 text-red-400 w-5 h-5 flex items-center justify-center rounded-full font-bold">!</span>
+                                <h4 class="font-medium text-sm text-red-400">Phí Thay Đổi Chủ Đề</h4>
+                            </div>
+                            <p class="text-xs text-neutral-400 leading-relaxed">
+                                Nếu sau 24h (hoặc khi thợ đã giao mẫu) bạn muốn <span class="text-white font-semibold">đổi hoàn toàn sang chủ đề khác</span>, tiệm sẽ tính thêm phí bằng <span class="text-white font-semibold">50% tiền cọc</span>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deposits & Schedules -->
+                <div class="pt-4 border-t border-neutral-900">
+                    <h3 class="text-base font-semibold text-white flex items-center space-x-2 mb-4">
+                        <span class="w-2 h-2 rounded-full bg-white"></span>
+                        <span>3. Đặt Cọc & Lịch Hẹn</span>
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3 bg-neutral-900/30 p-3 rounded-xl border border-neutral-900">
+                            <span class="text-xl">💵</span>
+                            <div class="space-y-1">
+                                <h4 class="text-sm font-semibold text-white">Đặt cọc thiết kế: 200k – 500k</h4>
+                                <p class="text-xs text-neutral-400 leading-relaxed">
+                                    Số tiền này dùng để đảm bảo trách nhiệm làm việc giữa 2 bên. Tiệm sẽ <span class="text-white font-semibold">HOÀN TRẢ TRỰC TIẾP</span> (trừ thẳng vào chi phí xăm) khi bạn đến tiệm thực hiện hình xăm!
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3 bg-neutral-900/30 p-3 rounded-xl border border-neutral-900">
+                            <span class="text-xl">📅</span>
+                            <div class="space-y-1">
+                                <h4 class="text-sm font-semibold text-white">Lịch xăm & Tôn trọng thời gian</h4>
+                                <p class="text-xs text-neutral-400 leading-relaxed">
+                                    Vui lòng đến đúng giờ để buổi xăm diễn ra trọn vẹn. Nếu có việc bận đột xuất cần dời lịch, vui lòng <span class="text-white font-semibold">báo trước ít nhất 48 tiếng</span>. Trường hợp hủy hẹn đột xuất hoặc báo quá trễ, tiệm xin phép không hoàn cọc.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT: Live Poster Generation (5 cols on large) -->
+        <div class="lg:col-span-5 space-y-6">
+            <div class="sticky top-24 space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs uppercase tracking-widest text-neutral-400 font-semibold">Bản Xem Trước Ảnh Thẻ</span>
+                    <span class="text-xs text-neutral-500">Tự động cập nhật</span>
+                </div>
+
+                <!-- The Actual Poster Container (Will be exported) -->
+                <div id="capture-area" class="bg-black border border-neutral-800 p-6 rounded-2xl shadow-2xl relative overflow-hidden flex flex-col justify-between aspect-[3/4.5] max-w-[400px] mx-auto">
+                    <!-- Subtle Tech Grid background for design depth -->
+                    <div class="absolute inset-0 bg-[radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none"></div>
+                    
+                    <!-- Decorative corner frames -->
+                    <div class="absolute top-3 left-3 w-4 h-4 border-t border-l border-neutral-700"></div>
+                    <div class="absolute top-3 right-3 w-4 h-4 border-t border-r border-neutral-700"></div>
+                    <div class="absolute bottom-3 left-3 w-4 h-4 border-b border-l border-neutral-700"></div>
+                    <div class="absolute bottom-3 right-3 w-4 h-4 border-b border-r border-neutral-700"></div>
+
+                    <!-- Header inside the poster -->
+                    <div class="relative z-10 text-center space-y-3 mt-4">
+                        <div class="flex justify-center">
+                            <!-- Duplicate SVG Logo for the canvas capture -->
+                            <svg class="h-14 w-auto" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 45 C 15 20, 50 20, 50 40 C 50 55, 15 60, 15 75 L 55 75" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M20 42 C 20 25, 45 25, 45 40 C 45 52, 20 57, 20 70 L 50 70" stroke="#a3a3a3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M25 39 C 25 30, 40 30, 40 40 C 40 49, 25 54, 25 65 L 45 65" stroke="#525252" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M60 15 L 60 40" stroke="white" stroke-width="4"/>
+                                <path d="M57 40 L 63 40 L 60 60 Z" fill="white"/>
+                                <path d="M68 20 L 90 20 C 108 20, 108 75, 90 75 L 68 75 Z" fill="#171717" stroke="white" stroke-width="4"/>
+                                <circle cx="80" cy="35" r="4" fill="#a3a3a3"/>
+                                <circle cx="92" cy="48" r="5" fill="#737373"/>
+                                <circle cx="85" cy="60" r="3" fill="#525252"/>
+                                <circle cx="76" cy="50" r="6" fill="#404040"/>
+                                <text x="60" y="93" fill="white" class="font-bold tracking-widest text-[16px]" font-family="Montserrat" text-anchor="middle">INK</text>
+                                <path d="M60 93 L 60 96 C 58 96, 58 98, 60 98 C 62 98, 62 96, 60 96 Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="space-y-1">
+                            <h2 class="serif-font text-xl tracking-wider text-white uppercase">Phiếu Đăng Ký Thiết Kế</h2>
+                            <p class="text-[9px] tracking-widest text-neutral-400 uppercase">2D INK Tattoo Studio • Premium Design Card</p>
+                        </div>
+                        <div class="w-16 h-[1px] bg-neutral-800 mx-auto"></div>
+                    </div>
+
+                    <!-- Client Custom Info in Poster -->
+                    <div class="relative z-10 my-6 space-y-3.5 px-2">
+                        <div class="grid grid-cols-3 gap-2 border-b border-neutral-900 pb-2">
+                            <span class="text-[10px] text-neutral-500 uppercase font-semibold">Vị Trí:</span>
+                            <span id="preview-position" class="col-span-2 text-xs text-white font-medium text-right">Chưa nhập</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 border-b border-neutral-900 pb-2">
+                            <span class="text-[10px] text-neutral-500 uppercase font-semibold">Kích Thước:</span>
+                            <span id="preview-size" class="col-span-2 text-xs text-white font-medium text-right">Chưa nhập</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 border-b border-neutral-900 pb-2">
+                            <span class="text-[10px] text-neutral-500 uppercase font-semibold">Thể Loại:</span>
+                            <span id="preview-color" class="col-span-2 text-xs text-white font-medium text-right">Trắng đen (Black & Grey)</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 border-b border-neutral-900 pb-2">
+                            <span class="text-[10px] text-neutral-500 uppercase font-semibold">Ngân Sách:</span>
+                            <span id="preview-budget" class="col-span-2 text-xs text-white font-medium text-right">Chưa nhập</span>
+                        </div>
+                        <div class="flex flex-col space-y-1">
+                            <span class="text-[10px] text-neutral-500 uppercase font-semibold">Ý Tưởng Chủ Đề:</span>
+                            <p id="preview-concept" class="text-xs text-neutral-300 italic bg-neutral-950/80 p-2.5 rounded border border-neutral-900 leading-relaxed min-h-[60px]">Chưa nhập mô tả ý tưởng chi tiết...</p>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Terms Summary on Poster -->
+                    <div class="relative z-10 space-y-3 border-t border-neutral-900 pt-4 mt-auto">
+                        <div class="grid grid-cols-2 gap-3 text-[9px] text-neutral-500 leading-tight">
+                            <div class="space-y-1">
+                                <span class="text-neutral-300 font-semibold">⚡ QUY TRÌNH 24H:</span>
+                                <p>Khóa ý tưởng sau 24h để vẽ. Giao 2 phương án sau 2-3 ngày.</p>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-neutral-300 font-semibold">🔒 ĐẶT CỌC:</span>
+                                <p>Cọc 200k-500k để thiết kế. Hoàn cọc ngay khi thực hiện xăm.</p>
+                            </div>
+                        </div>
+                        <div class="text-[8px] text-center text-neutral-600 border-t border-neutral-900 pt-2 tracking-wide uppercase">
+                            Cảm ơn bạn đã đồng hành cùng 2D INK
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Action Buttons -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="downloadPoster()" class="bg-white hover:bg-neutral-200 text-black text-xs font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center space-x-2 shadow-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        <span>Tải Ảnh Đăng Ký</span>
+                    </button>
+                    <button onclick="copyToClipboard()" class="bg-neutral-900 hover:bg-neutral-800 text-white border border-neutral-800 text-xs font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center space-x-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                        </svg>
+                        <span>Copy Văn Bản</span>
+                    </button>
+                </div>
+                
+                <p class="text-[11px] text-center text-neutral-500 leading-relaxed">
+                    * Bạn có thể gửi trực tiếp hình ảnh này qua tin nhắn để thợ xăm của <strong class="text-neutral-400">2D INK</strong> hỗ trợ nhanh nhất.
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Success Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-neutral-900 border border-neutral-800 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <span class="text-emerald-500 text-lg">✓</span>
+        <span id="toast-message" class="text-xs font-medium">Đã sao chép thành công!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-neutral-950 bg-black py-4 px-4 text-center text-xs text-neutral-600">
+        <p>© 2026 2D INK Tattoo Studio. Chúc tụi mình sẽ có một siêu phẩm cùng nhau!</p>
+    </footer>
+
+    <!-- Interactive Script Logic -->
+    <script>
+        // Get Elements
+        const formPosition = document.getElementById('form-position');
+        const formSize = document.getElementById('form-size');
+        const formColor = document.getElementById('form-color');
+        const formBudget = document.getElementById('form-budget');
+        const formConcept = document.getElementById('form-concept');
+
+        const previewPosition = document.getElementById('preview-position');
+        const previewSize = document.getElementById('preview-size');
+        const previewColor = document.getElementById('preview-color');
+        const previewBudget = document.getElementById('preview-budget');
+        const previewConcept = document.getElementById('preview-concept');
+
+        // Form Live Syncing
+        formPosition.addEventListener('input', (e) => {
+            previewPosition.textContent = e.target.value.trim() || 'Chưa nhập';
+        });
+
+        formSize.addEventListener('input', (e) => {
+            previewSize.textContent = e.target.value.trim() || 'Chưa nhập';
+        });
+
+        formColor.addEventListener('change', (e) => {
+            previewColor.textContent = e.target.value;
+        });
+
+        formBudget.addEventListener('input', (e) => {
+            previewBudget.textContent = e.target.value.trim() || 'Chưa nhập';
+        });
+
+        formConcept.addEventListener('input', (e) => {
+            previewConcept.textContent = e.target.value.trim() || 'Chưa nhập mô tả ý tưởng chi tiết...';
+        });
+
+        // Toast trigger
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Export as Image function
+        function downloadPoster() {
+            const element = document.getElementById('capture-area');
+            
+            // Temporary styles adjustment to ensure high quality rendering in canvas
+            html2canvas(element, {
+                backgroundColor: '#000000',
+                scale: 3, // Premium quality scale up
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `2D-INK-DangKyThietKe-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast("Đã lưu ảnh đăng ký về thiết bị!");
+            }).catch(err => {
+                console.error("Lỗi xuất ảnh: ", err);
+                showToast("Có lỗi xảy ra khi tạo ảnh.");
+            });
+        }
+
+        // Copy Text formatting
+        function copyToClipboard() {
+            const textToCopy = `📝 ĐĂNG KÝ THIẾT KẾ HÌNH XĂM - 2D INK
+----------------------------------
+📍 Vị trí xăm chính xác: ${formPosition.value || '(Chưa điền)'}
+📏 Kích thước mong muốn: ${formSize.value || '(Chưa điền)'}
+🎨 Màu sắc chủ đạo: ${formColor.value}
+💰 Chi phí dự kiến: ${formBudget.value || '(Chưa điền)'}
+💡 Ý tưởng chủ đề: ${formConcept.value || '(Chưa điền)'}
+----------------------------------
+* Khách hàng đã đọc kỹ quy trình 24h & quy định cọc.`;
+
+            // Standard fallback copy method to ensure iframe-compatibility
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = textToCopy;
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast("Đã copy văn bản đăng ký!");
+            } catch (err) {
+                showToast("Trình duyệt không hỗ trợ tự động copy.");
+            }
+            document.body.removeChild(tempTextarea);
+        }
+    </script>
+</body>
+</html>
+
+```
